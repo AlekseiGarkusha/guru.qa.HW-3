@@ -26,12 +26,37 @@ public class PositiveTest extends TestBase {
 
   @Test
   public void practiceFormTest() {
+    openForm("https://demoqa.com/");
 
+    $x("//a[@data-discover='true']").click();
+    $("Forms").scrollIntoView(true).shouldBe(visible).click();
+    $(byText("Practice Form")).scrollIntoView(true).shouldBe(visible).click();
 
-    // fill Fields
+    $(byText("Student Registration Form")).shouldBe(visible.because("❌ Форма 'Practice Form' - не загрузилась"));
 
+    $( "#firstName").shouldBe(visible).setValue(userFirstName);
+    $("#lastName").sendKeys(userLastName);
+    $(byText("Male")).click();
+    $("#userEmail").sendKeys(userEmail);
+    $("#userNumber").sendKeys(userNumber);
+    $("#dateOfBirthInput").shouldBe(visible).click();
 
+    $(byText("March")).shouldBe(visible).click();
+    $(byText("1991")).shouldBe(visible).click();
+    $(byText("29")).click();
 
+    $(byText("Sports")).shouldBe(visible).click();
+    $(byText("Reading")).shouldBe(visible).click();
+    $(byText("Music")).shouldBe(visible).click();
+    $("#uploadPicture").uploadFromClasspath(userPhoto);
+    $("#currentAddress").sendKeys(userCurrentAddress);
+    $("#state").shouldBe(visible).click();
+    $(byText("NCR")).shouldBe(visible).click();
+    $("#city").shouldBe(visible).click();
+    $(byText("Noida")).shouldBe(visible).click();
 
+    $("#submit").click();
+
+    $(byText("Thanks for submitting the form")).shouldBe(visible.because("❌ Форма с результирующими данными пользователя - не загрузилась"));
   }
 }
