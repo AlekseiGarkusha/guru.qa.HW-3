@@ -60,3 +60,4 @@ public class PositiveTest extends TestBase {
     $(byText("Thanks for submitting the form")).shouldBe(visible.because("❌ Форма с результирующими данными пользователя - не загрузилась"));
   }
 }
+
