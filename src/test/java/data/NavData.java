@@ -8,5 +8,4 @@ public class NavData {
 
   //Btn
   public static String btnSubmit = "#submit";
-
 }

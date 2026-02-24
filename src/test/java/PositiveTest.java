@@ -10,54 +10,40 @@
 import org.junit.jupiter.api.*;
 import setup.TestBase;
 
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+import static data.TestData.*;
 
 public class PositiveTest extends TestBase {
 
-  public static String userFirstName = "Гуров";
-  public static String userLastName = "Иван";
-  public static String userEmail = "test@ya.ru";
-  public static String userNumber = "1234567890";
-
-  public static String userPhoto = "Code.png";
-  public static String userCurrentAddress = "Florida";
-
   @Test
   public void practiceFormTest() {
-    openForm("https://demoqa.com/");
+    open("/automation-practice-form");
 
-    $x("//a[@data-discover='true']").click();
-    $("Forms").scrollIntoView(true).shouldBe(visible).click();
-    $(byText("Practice Form")).scrollIntoView(true).shouldBe(visible).click();
-
-    $(byText("Student Registration Form")).shouldBe(visible.because("❌ Форма 'Practice Form' - не загрузилась"));
-
-    $( "#firstName").shouldBe(visible).setValue(userFirstName);
+    $("#firstName").shouldBe(visible).setValue(userFirstName);
     $("#lastName").sendKeys(userLastName);
-    $(byText("Male")).click();
     $("#userEmail").sendKeys(userEmail);
+    $("#gender-radio-1").shouldHave(value(userGenderMale)).click();
     $("#userNumber").sendKeys(userNumber);
-    $("#dateOfBirthInput").shouldBe(visible).click();
 
-    $(byText("March")).shouldBe(visible).click();
-    $(byText("1991")).shouldBe(visible).click();
-    $(byText("29")).click();
+    $("#dateOfBirthInput").click();
+    $(".react-datepicker__month-select").selectOption(userMonth);
+    $(".react-datepicker__year-select").selectOption(userYear);
+    $(".react-datepicker__day--" + userDay).shouldBe(visible).click();
 
-    $(byText("Sports")).shouldBe(visible).click();
-    $(byText("Reading")).shouldBe(visible).click();
-    $(byText("Music")).shouldBe(visible).click();
+    $("#hobbies-checkbox-1").shouldHave(value(userHobbiesSports)).click();
+    $("#hobbies-checkbox-2").shouldHave(value(userHobbiesReading)).click();
+    $("#hobbies-checkbox-3").shouldHave(value(userHobbiesMusic)).click();
+
     $("#uploadPicture").uploadFromClasspath(userPhoto);
     $("#currentAddress").sendKeys(userCurrentAddress);
-    $("#state").shouldBe(visible).click();
-    $(byText("NCR")).shouldBe(visible).click();
-    $("#city").shouldBe(visible).click();
-    $(byText("Noida")).shouldBe(visible).click();
 
+    $("#react-select-3-input").setValue(userState).pressEnter();
+
+    $("#react-select-4-input").shouldBe(visible).setValue(userCity).pressEnter();
     $("#submit").click();
 
     $(byText("Thanks for submitting the form")).shouldBe(visible.because("❌ Форма с результирующими данными пользователя - не загрузилась"));
   }
 }
-
