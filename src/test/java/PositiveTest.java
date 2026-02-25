@@ -7,7 +7,9 @@
  * - сравнение результирующий полей с вводимыми
  */
 
+import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.Keys;
 import setup.TestBase;
 
 import static com.codeborne.selenide.Condition.*;
@@ -31,6 +33,18 @@ public class PositiveTest extends TestBase {
     $(".react-datepicker__month-select").selectOption(userMonth);
     $(".react-datepicker__year-select").selectOption(userYear);
     $(".react-datepicker__day--" + userDay).shouldBe(visible).click();
+
+    SelenideElement sendKeysHistory = $("#subjectsInput");
+    sendKeysHistory.sendKeys(userSubjectHistory);
+    sendKeysHistory.sendKeys(Keys.TAB);
+
+    SelenideElement sendKeysEnglish = $("#subjectsInput");
+    sendKeysEnglish.sendKeys(userSubjectEnglish);
+    sendKeysEnglish.sendKeys(Keys.TAB);
+
+    SelenideElement sendKeysMaths = $("#subjectsInput");
+    sendKeysMaths.sendKeys(userSubjectMaths);
+    sendKeysMaths.sendKeys(Keys.TAB);
 
     $("#hobbies-checkbox-1").shouldHave(value(userHobbiesSports)).click();
     $("#hobbies-checkbox-2").shouldHave(value(userHobbiesReading)).click();
