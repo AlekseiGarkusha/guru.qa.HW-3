@@ -25,7 +25,7 @@ public class TestData {
   public static final String userCity = "Noida";
 
 
-  public static final String userPhoto = "Code.png";
+  public static final String userPicture = "Code.png";
   public static final String userCurrentAddress = "Florida";
 
 }
