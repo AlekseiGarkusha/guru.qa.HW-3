@@ -7,20 +7,20 @@
  * - сравнение результирующий полей с вводимыми
  */
 
-import com.codeborne.selenide.SelenideElement;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.Keys;
 import setup.TestBase;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static data.TestData.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class PositiveTest extends TestBase {
 
   @Test
   public void practiceFormTest() {
+
     open("/automation-practice-form");
 
     $("#firstName").shouldBe(visible).setValue(userFirstName);
@@ -32,23 +32,15 @@ public class PositiveTest extends TestBase {
     $("#dateOfBirthInput").click();
     $(".react-datepicker__month-select").selectOption(userMonth);
     $(".react-datepicker__year-select").selectOption(userYear);
-    $(".react-datepicker__day--" + userDay).shouldBe(visible).click();
+    $(".react-datepicker__day--0" + userDay).shouldBe(visible).click();
 
-    SelenideElement sendKeysHistory = $("#subjectsInput");
-    sendKeysHistory.sendKeys(userSubjectHistory);
-    sendKeysHistory.sendKeys(Keys.TAB);
+    $("#subjectsInput").setValue(userSubjectHistory).pressEnter();
+    $("#subjectsInput").setValue(userSubjectEnglish).pressEnter();
+    $("#subjectsInput").setValue(userSubjectMaths).pressEnter();
 
-    SelenideElement sendKeysEnglish = $("#subjectsInput");
-    sendKeysEnglish.sendKeys(userSubjectEnglish);
-    sendKeysEnglish.sendKeys(Keys.TAB);
-
-    SelenideElement sendKeysMaths = $("#subjectsInput");
-    sendKeysMaths.sendKeys(userSubjectMaths);
-    sendKeysMaths.sendKeys(Keys.TAB);
-
-    $("#hobbies-checkbox-1").shouldHave(value(userHobbiesSports)).click();
-    $("#hobbies-checkbox-2").shouldHave(value(userHobbiesReading)).click();
-    $("#hobbies-checkbox-3").shouldHave(value(userHobbiesMusic)).click();
+    $$(".form-check-label").findBy(text(userHobbiesSports)).click();
+    $$(".form-check-label").findBy(text(userHobbiesReading)).click();
+    $$(".form-check-label").findBy(text(userHobbiesMusic)).click();
 
     $("#uploadPicture").uploadFromClasspath(userPhoto);
     $("#currentAddress").sendKeys(userCurrentAddress);
@@ -58,6 +50,18 @@ public class PositiveTest extends TestBase {
     $("#react-select-4-input").shouldBe(visible).setValue(userCity).pressEnter();
     $("#submit").click();
 
-    $(byText("Thanks for submitting the form")).shouldBe(visible.because("❌ Форма с результирующими данными пользователя - не загрузилась"));
+    assertAll(
+      () -> $(byText("Thanks for submitting the form")).shouldBe(visible.because("❌ Форма с результирующими данными пользователя - не загрузилась")),
+
+      () -> $(".table-responsive").$(byText("Student Email")).sibling(0).shouldHave(text(userEmail)),
+      () -> $(".table-responsive").$(byText("Gender")).sibling(0).shouldHave(text(userGenderMale)),
+      () -> $(".table-responsive").$(byText("Mobile")).sibling(0).shouldHave(text(userNumber)),
+      () -> $(".table-responsive").$(byText("Date of Birth")).sibling(0).shouldHave(text(userDay + " " + userMonth + "," + userYear)),
+      () -> $(".table-responsive").$(byText("Subjects")).sibling(0).shouldHave(text(userSubjectHistory + ", " + userSubjectEnglish + ", " + userSubjectMaths)),
+      () -> $(".table-responsive").$(byText("Hobbies")).sibling(0).shouldHave(text(userHobbiesSports + ", " + userHobbiesReading + ", " + userHobbiesMusic)),
+      () -> $(".table-responsive").$(byText("Picture")).sibling(0).shouldHave(text(userPhoto)),
+      () -> $(".table-responsive").$(byText("Address")).sibling(0).shouldHave(text(userCurrentAddress)),
+      () -> $(".table-responsive").$(byText("State and City")).sibling(0).shouldHave(text(userState + " " + userCity))
+    );
   }
 }
